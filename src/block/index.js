@@ -2153,11 +2153,11 @@ class MbitMoreBlocks {
     /**
      * @return {array} - Menu items for connection state.
      */
-    get CONNECTION_STATE_MENU () {
+    get WHEN_CONNECTION_CHANGED_MENU () {
         return [
             {
                 text: formatMessage({
-                    id: 'mbitMore.connectionStateMenu.connected',
+                    id: 'mbitMore.whenConnectionChangedStateMenu.connected',
                     default: 'connected',
                     description: 'label for connected'
                 }),
@@ -2165,11 +2165,35 @@ class MbitMoreBlocks {
             },
             {
                 text: formatMessage({
-                    id: 'mbitMore.connectionStateMenu.disconnected',
+                    id: 'mbitMore.whenConnectionChangedStateMenu.disconnected',
                     default: 'disconnected',
                     description: 'label for disconnected'
                 }),
                 value: 'disconnected'
+            }
+        ];
+    }
+
+    /**
+     * @return {array} - Menu items for change connection state.
+     */
+    get CHANGE_CONNECTION_MENU () {
+        return [
+            {
+                text: formatMessage({
+                    id: 'mbitMore.changeConnectionStateMenu.connect',
+                    default: 'connect to',
+                    description: 'label for connect'
+                }),
+                value: 'connect'
+            },
+            {
+                text: formatMessage({
+                    id: 'mbitMore.changeConnectionStateMenu.disconnect',
+                    default: 'disconnect from',
+                    description: 'label for disconnect'
+                }),
+                value: 'disconnect'
             }
         ];
     }
@@ -2233,15 +2257,40 @@ class MbitMoreBlocks {
                     opcode: 'whenConnectionChanged',
                     text: formatMessage({
                         id: 'mbitMore.whenConnectionChanged',
-                        default: 'when micro:bit [STATE]',
+                        default: 'when micro:bit is [STATE]',
                         description: 'when a micro:bit connection state changed'
                     }),
                     blockType: BlockType.HAT,
                     arguments: {
                         STATE: {
                             type: ArgumentType.STRING,
-                            menu: 'connectionStateMenu',
+                            menu: 'whenConnectionChangedStateMenu',
                             defaultValue: 'connected'
+                        }
+                    }
+                },
+                {
+                    opcode: 'isConnected',
+                    text: formatMessage({
+                        id: 'mbitMore.isConnected',
+                        default: 'micro:bit is connected',
+                        description: 'whether a micro:bit is connected or not'
+                    }),
+                    blockType: BlockType.BOOLEAN
+                },
+                {
+                    opcode: 'changeConnection',
+                    text: formatMessage({
+                        id: 'mbitMore.changeConnection',
+                        default: '[STATE] micro:bit',
+                        description: 'connect or disconnect micro:bit'
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        STATE: {
+                            type: ArgumentType.STRING,
+                            menu: 'changeConnectionStateMenu',
+                            defaultValue: 'connect'
                         }
                     }
                 },
@@ -2790,9 +2839,13 @@ class MbitMoreBlocks {
                     acceptReporters: false,
                     items: this.PIN_EVENT_TIMESTAMP_MENU
                 },
-                connectionStateMenu: {
+                whenConnectionChangedStateMenu: {
                     acceptReporters: false,
-                    items: this.CONNECTION_STATE_MENU
+                    items: this.WHEN_CONNECTION_CHANGED_MENU
+                },
+                changeConnectionStateMenu: {
+                    acceptReporters: false,
+                    items: this.CHANGE_CONNECTION_MENU
                 }
             },
             // eslint-disable-next-line no-use-before-define
@@ -3380,7 +3433,7 @@ class MbitMoreBlocks {
     }
 
     /**
-     * Test whether a micro:bit connected.
+     * Test whether a micro:bit is connected or not.
      * @param {object} args - the block's arguments.
      * @property {string} args.STATE - the state of connection to check.
      * @return {boolean} - true if the state is matched.
@@ -3388,6 +3441,31 @@ class MbitMoreBlocks {
     whenConnectionChanged (args) {
         const state = (args.STATE === 'connected');
         return (state === this._peripheral.isConnected());
+    }
+
+    /**
+     * Test a micro:bit is connected.
+     * @param {object} args - the block's arguments.
+     * @property {string} args.STATE - the state of connection to check.
+     * @return {boolean} - true if the state is matched.
+     */
+    isConnected () {
+        return this._peripheral.isConnected();
+    }
+
+    /**
+     * Connect or disconnect micro:bit.
+     * @param {object} args - the block's arguments.
+     * @property {boolean} args.STATE - 'connect' for connecting to micro:bit
+     */
+    changeConnection (args) {
+        const requestState = (args.STATE === 'connect');
+        if (requestState === this._peripheral.isConnected()) return;
+        if (requestState) {
+            this._peripheral.scan();
+        } else {
+            this._peripheral.disconnect();
+        }
     }
 
     /**
@@ -3484,9 +3562,13 @@ const extensionTranslations = {
         'mbitMore.whenDataReceived': 'micro:bit からラベル [LABEL] のデータを受け取ったとき',
         'mbitMore.getDataLabeled': 'ラベル [LABEL] のデータ',
         'mbitMore.sendData': 'micro:bit へデータ [DATA] にラベル [LABEL] を付けて送る',
-        'mbitMore.connectionStateMenu.connected': 'つながった',
-        'mbitMore.connectionStateMenu.disconnected': '切れた',
+        'mbitMore.whenConnectionChangedStateMenu.connected': 'つながった',
+        'mbitMore.whenConnectionChangedStateMenu.disconnected': '切れた',
         'mbitMore.whenConnectionChanged': 'micro:bit と[STATE]とき',
+        'mbitMore.isConnected': 'micro:bit とつながっている',
+        'mbitMore.changeConnectionStateMenu.connect': 'つなぐ',
+        'mbitMore.changeConnectionStateMenu.disconnect': '切る',
+        'mbitMore.changeConnection': 'micro:bit を[STATE]',
         'mbitMore.selectCommunicationRoute.connectWith': 'つなぎ方',
         'mbitMore.selectCommunicationRoute.bluetooth': 'Bluetooth',
         'mbitMore.selectCommunicationRoute.usb': 'USB',
@@ -3571,9 +3653,13 @@ const extensionTranslations = {
         'mbitMore.whenDataReceived': 'micro:bit からラベル [LABEL] のデータをうけとったとき',
         'mbitMore.getDataLabeled': 'ラベル [LABEL] のデータ',
         'mbitMore.sendData': 'micro:bit へデータ [DATA] にラベル [LABEL] をつけておくる',
-        'mbitMore.connectionStateMenu.connected': 'つながった',
-        'mbitMore.connectionStateMenu.disconnected': 'きれた',
+        'mbitMore.whenConnectionChangedStateMenu.connected': 'つながった',
+        'mbitMore.whenConnectionChangedStateMenu.disconnected': 'きれた',
         'mbitMore.whenConnectionChanged': 'micro:bit と[STATE]とき',
+        'mbitMore.isConnected': 'micro:bit とつながっている',
+        'mbitMore.changeConnectionStateMenu.connect': 'つなぐ',
+        'mbitMore.changeConnectionStateMenu.disconnect': 'きる',
+        'mbitMore.changeConnection': 'micro:bit を[STATE]',
         'mbitMore.selectCommunicationRoute.connectWith': 'つなぎかた',
         'mbitMore.selectCommunicationRoute.bluetooth': 'むせん',
         'mbitMore.selectCommunicationRoute.usb': 'ゆうせん',
