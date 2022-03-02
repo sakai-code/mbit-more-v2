@@ -1266,6 +1266,7 @@ class MbitMore {
      * @return {?Promise} a Promise that resolves when the all commands was sent.
      */
     sendCommandSet (commands, util) {
+        console.log("command:"+""+commands);
         if (!this.isConnected()) return Promise.resolve();
         if (this.bleBusy) {
             this.bleAccessWaiting = true;
@@ -1283,6 +1284,8 @@ class MbitMore {
             this.bleAccessWaiting = false;
         }, 1000);
         return new Promise(resolve => {
+
+       
             commands.reduce((acc, cur) => acc.then(() => this.sendCommand(cur)),
                 Promise.resolve()
             )

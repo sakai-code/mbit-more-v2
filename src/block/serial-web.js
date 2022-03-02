@@ -1,6 +1,15 @@
-const log = require('../../util/log');
+/**
+ *const log = require('../../util/log');
 const Buffer = require('buffer');
 const arrayBufferToBase64 = buffer => Buffer.from(buffer).toString('base64');
+const base64ToUint8Array = base64 => Buffer.from(base64, 'base64');
+ */
+
+// Fixed
+const {Buffer} = require('buffer');
+const log = require('../../util/log');
+
+const arrayBufferToBase64 = arrayBuffer => Buffer.from(arrayBuffer).toString('base64');
 const base64ToUint8Array = base64 => Buffer.from(base64, 'base64');
 
 /**
@@ -90,6 +99,7 @@ class WebSerial {
         this.notifyListeners = {};
 
         this.requestPeripheral();
+        console.log('set');
     }
 
     /**
@@ -119,6 +129,7 @@ class WebSerial {
      * callback when connection is successful.
      */
     connectPeripheral (/* id */) {
+        console.log('connect');
         if (!this.port) {
             throw new Error('device is not chosen');
         }
@@ -177,6 +188,7 @@ class WebSerial {
         this.port.open(this._serialOptions)
             .then(() => {
                 log.log(`SerialPort: open`);
+            
                 this.state = 'open';
                 this.writer = this.port.writable.getWriter();
                 // eslint-disable-next-line no-undef
@@ -202,6 +214,7 @@ class WebSerial {
         if (this.state !== 'open') return Promise.resolve();
         this.state = 'closing';
         this.stopReceiving();
+    
         return this.reader.cancel()
             .then(() => this.readableStreamClosed.catch(() => { /* Ignore the error */ }))
             .then(() => {
@@ -234,6 +247,7 @@ class WebSerial {
         return this.reader.read()
             .then(result => {
                 const {value, done} = result;
+               
                 if (done) {
                     this.reader.releaseLock();
                 }
@@ -244,13 +258,19 @@ class WebSerial {
                         this.chValues[ch] = {};
                     }
                     this.chValues[ch][data.type] = data.value;
+                   
+
                     if (data.type === ChResponse.NOTIFY) {
+                        console.log(data.type);
+                      
                         if (ch in this.notifyListeners) {
-                            this.notifyListeners[ch](arrayBufferToBase64(data.value));
+
+                            this.notifyListeners[ch](arrayBufferToBase64(data.value)); //Fixed
                         }
                     }
-                    // log.debug({ch: ch, type: data.type, value: data.value});
+                    
                 }
+               
             });
     }
 
@@ -258,15 +278,23 @@ class WebSerial {
      * Start data receiving process.
      */
     startReceiving () {
+        
         this.dataReceiving = window.setTimeout(() => {
             if (this.state !== 'open') return;
             this.receiveData()
                 .then(() => {
                     // start again
+                   
                     this.startReceiving();
                 })
                 .catch(() => {
-                    this.handleDisconnectError();
+
+
+                   
+                     
+                    this.startReceiving(); //add  no stopping when error packet
+                    
+                    //this.handleDisconnectError(); //add
                 });
         }, this.receivingInterval);
     }
@@ -285,6 +313,7 @@ class WebSerial {
      * @returns {Promise} - a Promise which will resolve write process was done
      */
     sendData (data) {
+        console.log('send:'+""+data);
         return this.writer.ready
             .then(() => this.writer.write(data))
             .then(() => new Promise(resolve => {
@@ -303,10 +332,12 @@ class WebSerial {
     startNotifications (_serviceId, characteristicId, onCharacteristicChanged = null) {
         // Connected device will start necessary notifications automatically on serial-port.
         this.notifyListeners[SERIAL_CH_ID[characteristicId]] = onCharacteristicChanged;
+       
         return Promise.resolve();
     }
 
     readCh (ch) {
+        console.log(ch);
         if (this.state !== 'open') {
             return Promise.reject(new Error('port is not opened'));
         }
@@ -353,6 +384,7 @@ class WebSerial {
      */
     read (serviceId, characteristicId, optStartNotifications = false, onCharacteristicChanged = null) {
         const ch = SERIAL_CH_ID[characteristicId];
+    
         const constantUpdatingCh = [
             0x0101, /* State */
             0x0102 /* Motion */
@@ -409,6 +441,7 @@ class WebSerial {
      * @returns {Promise} - a Promise which will resolve true when success to write
      */
     writeCh (ch, value, withResponse) {
+        console.log('write');
         if (this.state !== 'open') {
             return Promise.reject(new Error('port is not opened'));
         }
