@@ -1040,6 +1040,9 @@ class MbitMore {
      * Start to scan Bluetooth LE devices to find micro:bit with MicroBit More service.
      */
     scanBLE () {
+        
+        this.scanSerial(); //avoid BLE SCAN 
+        /** 
         const connectorClass = BLE;
         this._ble = new connectorClass(
             this.runtime,
@@ -1053,12 +1056,14 @@ class MbitMore {
             this._onConnect,
             this.onDisconnect
         );
+        */
     }
 
     /**
      * Start to scan USB serial devices to find micro:bit v2.
      */
     scanSerial () {
+      
         this._ble = new WebSerial(
             this.runtime,
             this._extensionId,
@@ -1183,11 +1188,13 @@ class MbitMore {
             this._ble.disconnect();
         }
         this.bleBusy = true;
-        if (('serial' in navigator) && this.isKeyPressing('Shift')) {
-            this.selectCommunicationRoute();
-        } else {
-            this.scanBLE();
-        }
+        /**  if (('serial' in navigator) && this.isKeyPressing('Shift')) {
+        * this.selectCommunicationRoute();
+        *} else {  
+        *   this.scanBLE();
+        * }
+        */ //avoid communication root
+       this.scanSerial();
     }
 
     /**
@@ -1266,6 +1273,7 @@ class MbitMore {
      * @return {?Promise} a Promise that resolves when the all commands was sent.
      */
     sendCommandSet (commands, util) {
+        
         if (!this.isConnected()) return Promise.resolve();
         if (this.bleBusy) {
             this.bleAccessWaiting = true;
@@ -1283,6 +1291,8 @@ class MbitMore {
             this.bleAccessWaiting = false;
         }, 1000);
         return new Promise(resolve => {
+
+       
             commands.reduce((acc, cur) => acc.then(() => this.sendCommand(cur)),
                 Promise.resolve()
             )
