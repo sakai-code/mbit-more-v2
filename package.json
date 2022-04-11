@@ -5,7 +5,7 @@
   "module": "./dist/microbitMore.mjs",
   "scripts": {
     "register": "npx xcratch-register --link -C --id=microbitMore --gui=\"../scratch-gui\"",
-    "build": "npx xcratch-build --module=microbitMore --gui=\"../scratch-gui\"",
+    "build": "npx xcratch-build --module=microbitMore --block=src/block --entry=src/entry  --gui=\"../scratch-gui\"",
     "start:local": "cd ../scratch-gui && npm run start -- --https",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
