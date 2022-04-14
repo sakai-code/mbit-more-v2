@@ -24,7 +24,10 @@ const SERIAL_CH_ID = {
     '0b500120-607f-4151-9091-7d008d6ffc5c': 0x0120,
     '0b500121-607f-4151-9091-7d008d6ffc5c': 0x0121,
     '0b500122-607f-4151-9091-7d008d6ffc5c': 0x0122,
-    '0b500130-607f-4151-9091-7d008d6ffc5c': 0x0130
+    '0b500130-607f-4151-9091-7d008d6ffc5c': 0x0130,
+    '0b500140-607f-4151-9091-7d008d6ffc5c': 0x0140,
+
+
 };
 
 /**
@@ -292,7 +295,7 @@ class WebSerial {
 
                    
                      
-                    this.startReceiving(); //add  no stopping when error packet
+                this.startReceiving(); //add  no stopping when error packet
                     
                     //this.handleDisconnectError(); //add
                 });
@@ -539,19 +542,30 @@ class WebSerial {
      * reset callback, call it. Finally, emit an error to the runtime.
      */
     handleDisconnectError (/* e */) {
-        if (this.state !== 'open') return;
+     if (this.state !== 'open') return;
+    this.disconnect()
+     .then(() => {
+         if (this._resetCallback) {
+             this._resetCallback();
+         }
 
-        this.disconnect()
-            .then(() => {
-                if (this._resetCallback) {
-                    this._resetCallback();
-                }
+         this._runtime.emit(this._runtime.constructor.PERIPHERAL_CONNECTION_LOST_ERROR, {
+             message: `Scratch lost connection to`,
+             extensionId: this._extensionId
+         });
+         
+     })
+     
+     .catch(err => {
+        //this.handleDisconnectError(err);
+        log.debug(err);
+        this._runtime.emit(this._runtime.constructor.PERIPHERAL_DISCONNECTED);
+        return;
+        
+    });
 
-                this._runtime.emit(this._runtime.constructor.PERIPHERAL_CONNECTION_LOST_ERROR, {
-                    message: `Scratch lost connection to`,
-                    extensionId: this._extensionId
-                });
-            });
+
+   
     }
 
     _handleRequestError (/* e */) {
@@ -568,6 +582,7 @@ class WebSerial {
      */
     onDisconnected (/* event */) {
         this.handleDisconnectError(new Error('device disconnected'));
+
     }
 }
 

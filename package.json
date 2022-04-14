@@ -1,10 +1,10 @@
 {
-  "name": "mbit-more-v2",
-  "version": "0.2.4",
+  "name": "mbit-more-v2-with-radio",
+  "version": "0.2.4+α　radio",
   "description": "Full-functional extension of micro:bit for Scratch3",
-  "module": "./dist/microbitMore.mjs",
+  "module": "./dist/microbitMorev2-with-radio.mjs",
   "scripts": {
-    "register": "npx xcratch-register --link -C --id=microbitMore --gui=\"../scratch-gui\"",
+    "register": "npx xcratch-register  -C --id=microbitMorev2-with-radio --block=src/block --entry=src/entry --gui=\"../scratch-gui\"",
     "build": "npx xcratch-build --module=microbitMore --block=src/block --entry=src/entry  --gui=\"../scratch-gui\"",
     "start:local": "cd ../scratch-gui && npm run start -- --https",
     "test": "echo \"Error: no test specified\" && exit 1"
