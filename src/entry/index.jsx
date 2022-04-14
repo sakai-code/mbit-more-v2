@@ -48,7 +48,7 @@ const entry = {
             id: 'gui.extension.microbit.connectingMessage'
         });
     },
-    helpLink: 'https://microbit-more.github.io/',
+    helpLink: 'https://sakai-labo.github.io/microbit-morev2_with_radio.github.io/index-ja.html',
     setFormatMessage: formatter => {
         formatMessage = formatter;
     },

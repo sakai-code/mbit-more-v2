@@ -21,7 +21,7 @@ const EXTENSION_ID = 'microbitMorev2withradio';
  * When it was loaded as a module, 'extensionURL' will be replaced a URL which is retrieved from.
  * @type {string}
  */
-let extensionURL = 'https://microbit-more.github.io/dist/microbitMorev2-with-Radio.mjs';
+let extensionURL = 'https://sakai-labo.github.io/sxratchtest/dist/microbitMorev2_with_radio.mjs';
 
 /**
  * Icon png to be displayed at the left edge of each extension block, encoded as a data URI.

@@ -54,7 +54,7 @@ var entry = {
     });
   },
 
-  helpLink: 'https://microbit-more.github.io/',
+  helpLink: 'https://sakai-labo.github.io/microbit-morev2_with_radio.github.io/index-ja.html',
   setFormatMessage: function setFormatMessage(formatter) {
     formatMessage$1 = formatter;
   },
@@ -4116,7 +4116,7 @@ var EXTENSION_ID = 'microbitMorev2withradio';
  * @type {string}
  */
 
-var extensionURL = 'https://microbit-more.github.io/dist/microbitMorev2-with-Radio.mjs';
+var extensionURL = 'https://sakai-labo.github.io/sxratchtest/dist/microbitMorev2_with_radio.mjs';
 /**
  * Icon png to be displayed at the left edge of each extension block, encoded as a data URI.
  * @type {string}
