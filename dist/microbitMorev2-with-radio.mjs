@@ -24,7 +24,7 @@ var translationMap = {
 var entry = {
   name: 'Microbit More with Radio',
   extensionId: 'microbitMorev2withradio',
-  extensionURL: 'https://microbit-more.github.io/dist/microbitMore.mjs',
+  extensionURL: 'https://sakai-labo.github.io/mbit-more-v2-with-radio/dist/microbitMorev2-with-radio.mjs',
   collaborator: 'Yengawa Lab +@ sakai',
   iconURL: img$3,
   insetIconURL: img$2,
