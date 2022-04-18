@@ -4,8 +4,8 @@
   "description": "Full-functional extension of micro:bit for Scratch3",
   "module": "./dist/microbitMorev2-with-radio.mjs",
   "scripts": {
-    "register": "npx xcratch-register  -C --id=microbitMorev2_with_radio --block=src/block --entry=src/entry --gui=\"../scratch-gui\"",
-    "build": "npx xcratch-build --module=microbitMorev2_with_radio --block=src/block --entry=src/entry  --gui=\"../scratch-gui\"",
+    "register": "npx xcratch-register  -C --id=microbitMorev2-with-radio --block=src/block --entry=src/entry --gui=\"../scratch-gui\"",
+    "build": "npx xcratch-build --module=microbitMorev2-with-radio --block=src/block --entry=src/entry  --gui=\"../scratch-gui\"",
     "start:local": "cd ../scratch-gui && npm run start -- --https",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
