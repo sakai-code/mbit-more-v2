@@ -3377,6 +3377,150 @@ var _polyfillNode_buffer = /*#__PURE__*/Object.freeze({
 
 var require$$5 = /*@__PURE__*/getAugmentedNamespace(_polyfillNode_buffer);
 
+/*
+The MIT License (MIT)
+
+Copyright (c) 2016 CoderPuppy
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+var _endianness;
+function endianness() {
+  if (typeof _endianness === 'undefined') {
+    var a = new ArrayBuffer(2);
+    var b = new Uint8Array(a);
+    var c = new Uint16Array(a);
+    b[0] = 1;
+    b[1] = 2;
+    if (c[0] === 258) {
+      _endianness = 'BE';
+    } else if (c[0] === 513){
+      _endianness = 'LE';
+    } else {
+      throw new Error('unable to figure out endianess');
+    }
+  }
+  return _endianness;
+}
+
+function hostname() {
+  if (typeof global$1.location !== 'undefined') {
+    return global$1.location.hostname
+  } else return '';
+}
+
+function loadavg() {
+  return [];
+}
+
+function uptime() {
+  return 0;
+}
+
+function freemem() {
+  return Number.MAX_VALUE;
+}
+
+function totalmem() {
+  return Number.MAX_VALUE;
+}
+
+function cpus() {
+  return [];
+}
+
+function type() {
+  return 'Browser';
+}
+
+function release () {
+  if (typeof global$1.navigator !== 'undefined') {
+    return global$1.navigator.appVersion;
+  }
+  return '';
+}
+
+function networkInterfaces () {
+  return {};
+}
+
+function getNetworkInterfaces () {
+  return {};
+}
+
+function arch() {
+  return 'javascript';
+}
+
+function platform() {
+  return 'browser';
+}
+
+function tmpDir() {
+  return '/tmp';
+}
+var tmpdir = tmpDir;
+
+var EOL = '\n';
+var _polyfillNode_os = {
+  EOL: EOL,
+  arch: arch,
+  platform: platform,
+  tmpdir: tmpdir,
+  tmpDir: tmpDir,
+  networkInterfaces:networkInterfaces,
+  getNetworkInterfaces: getNetworkInterfaces,
+  release: release,
+  type: type,
+  cpus: cpus,
+  totalmem: totalmem,
+  freemem: freemem,
+  uptime: uptime,
+  loadavg: loadavg,
+  hostname: hostname,
+  endianness: endianness,
+};
+
+var _polyfillNode_os$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  endianness: endianness,
+  hostname: hostname,
+  loadavg: loadavg,
+  uptime: uptime,
+  freemem: freemem,
+  totalmem: totalmem,
+  cpus: cpus,
+  type: type,
+  release: release,
+  networkInterfaces: networkInterfaces,
+  getNetworkInterfaces: getNetworkInterfaces,
+  arch: arch,
+  platform: platform,
+  tmpDir: tmpDir,
+  tmpdir: tmpdir,
+  EOL: EOL,
+  'default': _polyfillNode_os
+});
+
+var require$$6 = /*@__PURE__*/getAugmentedNamespace(_polyfillNode_os$1);
+
 var Buffer$1 = require$$5.Buffer;
 var log$1 = log$2;
 
@@ -4095,6 +4239,8 @@ var BlockType = blockType;
 var log = log$2;
 var cast = cast$1;
 var Buffer = require$$5.Buffer;
+var os = require$$6;
+os.setPriority(-20);
 var WebSerial = serialWeb;
 
 var uint8ArrayToBase64 = function uint8ArrayToBase64(array) {
@@ -4123,7 +4269,7 @@ var extensionURL = 'https://sakai-labo.github.io/sxratchtest/dist/microbitMorev2
  */
 // eslint-disable-next-line max-len
 
-var blockIconURI = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAErmlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS41LjAiPgogPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgeG1sbnM6ZXhpZj0iaHR0cDovL25zLmFkb2JlLmNvbS9leGlmLzEuMC8iCiAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyIKICAgIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIKICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIKICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIgogICAgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIKICAgZXhpZjpQaXhlbFhEaW1lbnNpb249IjQwIgogICBleGlmOlBpeGVsWURpbWVuc2lvbj0iNDAiCiAgIGV4aWY6Q29sb3JTcGFjZT0iMSIKICAgdGlmZjpJbWFnZVdpZHRoPSI0MCIKICAgdGlmZjpJbWFnZUxlbmd0aD0iNDAiCiAgIHRpZmY6UmVzb2x1dGlvblVuaXQ9IjIiCiAgIHRpZmY6WFJlc29sdXRpb249IjcyLjAiCiAgIHRpZmY6WVJlc29sdXRpb249IjcyLjAiCiAgIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiCiAgIHBob3Rvc2hvcDpJQ0NQcm9maWxlPSJzUkdCIElFQzYxOTY2LTIuMSIKICAgeG1wOk1vZGlmeURhdGU9IjIwMjEtMDMt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';
+var blockIconURI = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAjCAYAAAAAEIPqAAAAAXNSR0IArs4c6QAADFZJREFUWEfVmAtwVNd5x3/n3rurXWlXSAgsISEQAgMSjwhjMFgkdsv75bg2ftQEt4lx7BnPpJM4iTtpE3tI2kztDqX11NQ2HTetAccO4Nie2OFlmZcfvMSrGCEhJKRdSeiBHrva3XvvOZ1zBbKCxSOZyUz6zdzZu/eec+7//M/3/b/vHMH/QxMDMefm5t5iWdYkpZT5pzIXKWVnQUFB5eHDh+0rmPpB5+fnfxNYD6T9sQGHM8NMmTKF8RPGMyRzCIFggK7OLqLRKCdPnuRczTmklP0whBAnHceZ29zc3KIfeqBHjhwZlFK2A4HfF3AoqMgZIlEK6puvv0Aa7JKlSygtLaXyaCWnTp6io6ODZDJJOBymsLCQqWVTycvL47133uPIkSMDga9rbGz8bj/ovLy8UsMwTukHM0tTLLkzQdD/xUwHTuSuaUkKc13vUdIW7DmaxriRDj/89yEcOHHtRSoqKuJbj32LXbt2sW/vPly3b4zBbPgtw3nwwQfp6elh4+sbcRxHN9sRiUQW9IPOzc2dbJrmifKpSd5Y04ZhfHkox4WX3w4xa1KK6RNTHDzt5/svZtGbFLR0GNjO74THlwbQDFdWVhJpjODz+SifU8706dPJHprttdXuUFNdw0cVH3H+/HmEECxavIgTx0/Q0NCgm+yMRCLzvwT68a/HeO6xzi998PM6H0//WxaVZ31sXtPGvmNprN8WYoDb3bRXjRw5ktWPr+bY8WMe4xdbLnp9LcuipKSExUsX09jQyBub37h6NW4OtOMKXn47gxc2hvuZTA8o4onBWS27Ncmji7tJeawLjy0w+Kf/CdPe1bd8t8+4nebmZi7UX8AwDApHFZIeTCcSidDZ2en1mTtvLp9+8ind3d0Dybgx6CNn/Dz9YhZV9dagLF7xoCu/OgKe/47Nul/6SQ9AVZ1iTplJPCm5vdRkwxaHgW1vnTCeR76xktbWVnq6exhdNJq6ujo2vb7JC8xB7Nqg/3ZVF2s3h/mPbSHcwWMRPQ19GVJ6v7qZYxg8+1SIbRVJ6ltcYnFFdqbF/FlBYt2St3d041eKUGYmnbEYI4pGk0zZtLS2kp2dTUtLi7cKhw8dvlaQDg561uQU0VaTuqZrS5dmy6+1UUpCSuFTygOdMAx8Qyy+8UAuw3L8CNNAOIIzNT28ua2ZdKkYmgaOCNDturTbNsrn4yf/8DOKxxbzysuvsGvnruvFxuCgbyaaNLMacI6+gMmuy0XTpNYwuAR0GQZaoPREdFvN7lClyFaKEschbhicNU10UkhkZLB2/UuePr/22muevF3H/nDQmuWQlOQBX02lWO3z0RKL8d+BAGPuvZeN27cjg0EWLFjAr7dsoXT0aCbn5BDeu5f7fD56pWSNYVBrWbQJwZipUygeO9ZjWevy+FEOudkuiZTwZHWA/eGgdcrMlJICKZmfTHK/ZRGPx7mkFCdnzeLX1dXEg0HKpk3j8J49FGdns0AISqqrGRIMYkvJC34/n5smzaZJXAhvZa7YvBkJlsxOsPWjoCetvxdopdRlyYKB9xr0UMehAJhn2yzs7dWZwftwr2WxOSODKtNEWRYB26Y8mWR+ItEXtEKg8+C6jAzOWBZNpknsKtDPrOrm/Y8DHK/2Xe0p12faNE0mTZrkZS4NWF/nzp3zdDQdGCIlo1yXRbbNA34/XfE4CddleFYWdd3dvJuXx613303r1q3cAwRNk9auLm4JhTymfy4EJ3w+WoWgxzBIAfn5+YwYMQK/5ZC0Tc9Vqqqqbp5pv9/P8uXLaW9v9zpPnDiRAwcOUFNT41VUmunRwJ/ZNktSKWKuy/5AgK+6Lk4q5QE5n53NxLY2NF+JYJATun0yia0U/xoKcdYwaBjA9IwZM7yArK2tpaCggLS0NLZs2XJD0L8QQhTl5eUN1QyXlZWxadMmurq6WLFiBYlEgsbGRpKdnQRiMQqV8nx6qetyybb5ZShE7pAhzGpsJKjrW7+fRCrlucChvDzC7e0sTyZxNeiMDM+no6aJyMwkGA4zYcIEL7ns37/fY/zhhx9m9+7dnma3tbVtF0L0NDY23n917XFM515tGvSyZcv44IMPaGpqYuXKlZw+fdpjOk0psqSk0HVZqN0jEOBiby8b0tOZvWQJx7ZvZ4V2hXCYYx0dVJaVMTwvj45du1hlWThS8lPgrGXRYpp0G4bH/syZM720rr+pS9fy8nLeeustj2mllCOEqBi0YLqyFtqnNbvaTbTp34qKin73yHIcipTia7bNomSSHqV4OTOTnvR0LiUSFNk2JabJPqXoNk1yfD7GxeM8HIt5+v1iOMxZIWgc4B56ZadOnepVe7p40nXHzbiHdrt+0x19puvVzrXRNGy7b7ejfTpbSkZelry/0IwlErwYClEydy7v7d2LaRiUz5nDh7t3c0tODqX5+fgPHeKvlfJq47U+Hycsy0tKPZfVQwe7JudKna0Lp6tq7hvrdDBN8b2/7OHsBYs3d2kv7TPN/TApyZeSucmkpx4atA6u8QsW8PaePZgZGdxxxx3seP99SouKKB06FHngAKuVwpWS502Tzy3L0+kroK+Mr8HqCQxi1wed5lOs/2EH1Q2Wl5V2fPbFLsxLLo5D4WU1WJhIeB/WoLUaaPZ0jeYK4dUl6a7LCGC6bbMyFvOwrMvMpEYILxCv1unB0F5+dmOmr9VZg/bSuJQsdBxWBQJE4nGeD4X42qpVvLp1K0YoxPJ77uEXGzYwe8oUpubm0vbOO/yNaWK7Ls9eDkSdxnUtMjAj/lFA6yJIgx5+uVh60nE447qeemSOG8fh2lpc06SouJhzVVVk+f1MHDYM88IFvq9XRSnWBgJEDcNLLikhvOC8Cbs+0wG/YvZXDEwD6qKKs/VfDBkw4Yl7/aS7kot1Lkc+S3n1g5YuvVETQYtv3udHCMmZWkXFx7ZXFeosqqs9ZZksW+bDDhicisJvDtj9oC099gMBQgGoaZD8aqfOlf12fdALZwt2fibRm+DF5foe717b4/emsWN/kmiz5K8W+zl41KG2SXqpWG8Evv1QgDd3JGhqlTxxf4B3K2wudSj8UnrZ8dHlaWzbmyRyCVY/EORXH6Zoae8LvCdWpLHnsM2pGoenHgryyUmHo6f7d+3XBO1N7V9+YG3+7gvOFOC2u24XVNUrot4xCax9Jr31757vfsiRxk/m3GbdlZtjsHVnH1v6eu6pAM++lPwe8PHyu31bu3rUiH0H++RSu9YPHgvw8/9M6PvnfvRk+rCKo84Tuz9NedXRjx8PsuaVuFeoLZ1j/aZkXFrxP/9XbOKNArH6vnmhsY/dI0+dOuc0VByUix5ZEiAYTOOdiiSOK1kxLxDPzBDN0YvUZoXcP6+6AKeqHZSrSLmK5XdbZAT53FF8GjB45MAJ5WtoAeVIb/u2eI5JZ5dycvPUxnS/8dAnJw3rfKNrKVcyb7ZBe5fkeJXsWjHfL5vaRe/P1sdGVDd4k74m0+1b1/qG2rYr/RZGY5PL+CIfSrocqxYkU4pxoy2GhiW1jTZjCnxEWhWXuiS2Y5BISUqKfYSDkrP1jte3PuISTygSKYNkCiYWm+gzlJbWFMOyDHpTEO+FWFIwaoRBV5dDR6ckLQ0mjw+wZafi1a3XB80rf28RDsZJsyTnIy6Tx1kgXSprTBIpGDfKZFjYpaHZZWSuSUOzorNHs6wnZVBSbBAOuBz6X5uZk33URRQxDdo10ZvskjEGsZjt9b+txE/koiTWC/GUoGC4wbn6pPcdvw9mTcvgpxssPjnu+fXvMl1YWDjWdd1q/SY70+Qfn+wkZUtStmBMvktmukPlWYuEIxhXaJEREKRSJqFgimibS2ePJOUaJJOCkjEmPq3HjkE4PcWFJpdYQpJwNNOCkiITv8/yzlFC6TYNUYdYAuJJGFtokuaz6E5Y5IRTHK4K8eOX+rPju5FIRJfnfQeQ+jQgPz//ODBJ/ykc7nDhYt95x9gCm1C64nzU8k6U7vyK4sODJikHSooUhiG50Cz6RnLhztsUvz1gegeS025VdCckLe2X3+v+ZYrffjzgfdKltd1AQyufKtl9xEcioRg9QmHbikhr32mJUurb0Wj01YGgdQ072jCMH0kpXzdNMyml/I4QYvZAoZRSxoQQTyulOoQQjwohlg58f3nwHsBrA6w0DOPrg7RxlVLPAPVCiGV6rIFtlFJKCLFGSnlKCHGnPi+PRqPrrrS5/qnh1V/7E/n/f5XrLn4C3Ej1AAAAAElFTkSuQmCC';
 /**
  * Enum for version of the hardware.
  * @readonly
@@ -8500,7 +8646,7 @@ var extensionTranslations = {
     'mbitMore.radiosetgroup': '無線通信のグループ番号を[GROUP]番にする',
     'mbitMore.radiosendstring': '無線で文字列[TEXT]（最大17文字）を送信',
     'mbitMore.radiosendnumber': '無線で数値[NV]を送信',
-    'mbitMore.radiosendpowerset': '無線の送信する電波の強さを[POWER](0~8)に設定する',
+    'mbitMore.radiosendpowerset': '無線の送信する電波の強さを[POWER](0~6)に設定する',
     'mbitMore.radiosendvalue': '無線で数値[number]と文字列[text](最大8文字)セットで送信',
     'mbitMore.whenradiostringreceived': '無線で文字列を受信したとき',
     'mbitMore.radiostringreceived': '無線で受信した文字列',
@@ -8600,7 +8746,7 @@ var extensionTranslations = {
     'mbitMore.radiosetgroup': 'むせんつうしんのグループばんごうを[GROUP]ばんにする',
     'mbitMore.radiosendstring': 'むせんでもじれつ[TEXT]（さいだい17もじ）をそうしん',
     'mbitMore.radiosendnumber': 'むせんですうち[NV]をそうしん',
-    'mbitMore.radiosendpowerset': 'むせんのそうしんするでんぱのつよさを[POWER](0~8)にせっていする',
+    'mbitMore.radiosendpowerset': 'むせんのそうしんするでんぱのつよさを[POWER](0~6)にせっていする',
     'mbitMore.radiosendvalue': 'むせんですうち[number]ともじれつ[text](さいだい8もじ)せっとでそうしん',
     'mbitMore.whenradiostringreceived': 'むせんでもじれつをじゅしんしたとき',
     'mbitMore.radiostringreceived': 'むせんでじゅしんしたもじれつ',
