@@ -320,7 +320,7 @@ class WebSerial {
         });
 
         if (forwardtime - Data.now() >= 1){
-            requestAnimationFrame(this.startReceiving());
+            window.requestAnimationFrame(this.startReceiving());
         }
 
       
