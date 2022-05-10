@@ -3377,150 +3377,6 @@ var _polyfillNode_buffer = /*#__PURE__*/Object.freeze({
 
 var require$$5 = /*@__PURE__*/getAugmentedNamespace(_polyfillNode_buffer);
 
-/*
-The MIT License (MIT)
-
-Copyright (c) 2016 CoderPuppy
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-*/
-var _endianness;
-function endianness() {
-  if (typeof _endianness === 'undefined') {
-    var a = new ArrayBuffer(2);
-    var b = new Uint8Array(a);
-    var c = new Uint16Array(a);
-    b[0] = 1;
-    b[1] = 2;
-    if (c[0] === 258) {
-      _endianness = 'BE';
-    } else if (c[0] === 513){
-      _endianness = 'LE';
-    } else {
-      throw new Error('unable to figure out endianess');
-    }
-  }
-  return _endianness;
-}
-
-function hostname() {
-  if (typeof global$1.location !== 'undefined') {
-    return global$1.location.hostname
-  } else return '';
-}
-
-function loadavg() {
-  return [];
-}
-
-function uptime() {
-  return 0;
-}
-
-function freemem() {
-  return Number.MAX_VALUE;
-}
-
-function totalmem() {
-  return Number.MAX_VALUE;
-}
-
-function cpus() {
-  return [];
-}
-
-function type() {
-  return 'Browser';
-}
-
-function release () {
-  if (typeof global$1.navigator !== 'undefined') {
-    return global$1.navigator.appVersion;
-  }
-  return '';
-}
-
-function networkInterfaces () {
-  return {};
-}
-
-function getNetworkInterfaces () {
-  return {};
-}
-
-function arch() {
-  return 'javascript';
-}
-
-function platform() {
-  return 'browser';
-}
-
-function tmpDir() {
-  return '/tmp';
-}
-var tmpdir = tmpDir;
-
-var EOL = '\n';
-var _polyfillNode_os = {
-  EOL: EOL,
-  arch: arch,
-  platform: platform,
-  tmpdir: tmpdir,
-  tmpDir: tmpDir,
-  networkInterfaces:networkInterfaces,
-  getNetworkInterfaces: getNetworkInterfaces,
-  release: release,
-  type: type,
-  cpus: cpus,
-  totalmem: totalmem,
-  freemem: freemem,
-  uptime: uptime,
-  loadavg: loadavg,
-  hostname: hostname,
-  endianness: endianness,
-};
-
-var _polyfillNode_os$1 = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  endianness: endianness,
-  hostname: hostname,
-  loadavg: loadavg,
-  uptime: uptime,
-  freemem: freemem,
-  totalmem: totalmem,
-  cpus: cpus,
-  type: type,
-  release: release,
-  networkInterfaces: networkInterfaces,
-  getNetworkInterfaces: getNetworkInterfaces,
-  arch: arch,
-  platform: platform,
-  tmpDir: tmpDir,
-  tmpdir: tmpdir,
-  EOL: EOL,
-  'default': _polyfillNode_os
-});
-
-var require$$6 = /*@__PURE__*/getAugmentedNamespace(_polyfillNode_os$1);
-
 var Buffer$1 = require$$5.Buffer;
 var log$1 = log$2;
 
@@ -3863,18 +3719,40 @@ var WebSerial$1 = /*#__PURE__*/function () {
     value: function startReceiving() {
       var _this5 = this;
 
-      this.dataReceiving = window.setTimeout(function () {
-        if (_this5.state !== 'open') return;
+      // if window not active this program run slow ,so i fixed
 
-        _this5.receiveData().then(function () {
-          // start again
-          _this5.startReceiving();
-        }).catch(function () {
-          _this5.startReceiving(); //add  no stopping when error packet
-          //this.handleDisconnectError(); //add
-
-        });
+      /** 
+      
+      this.dataReceiving = window.setTimeout(() => {
+          if (this.state !== 'open') return;
+          this.receiveData()
+              .then(() => {
+                  // start again
+                 
+                  this.startReceiving();
+              })
+              .catch(() => {
+                     
+                   
+              this.startReceiving(); //add  no stopping when error packet
+                  
+                  //this.handleDisconnectError(); //add
+              });
       }, this.receivingInterval);
+      */
+      var forwardtime = Data.now();
+      this.receiveData().then(function () {
+        // start again
+        _this5.startReceiving();
+      }).catch(function () {
+        _this5.startReceiving(); //add  no stopping when error packet
+        //this.handleDisconnectError(); //add
+
+      });
+
+      if (forwardtime - Data.now() >= 1) {
+        requestAnimationFrame(this.startReceiving());
+      }
     }
     /**
      * Stop data receiving process.
@@ -4239,8 +4117,6 @@ var BlockType = blockType;
 var log = log$2;
 var cast = cast$1;
 var Buffer = require$$5.Buffer;
-var os = require$$6;
-os.setPriority(-20);
 var WebSerial = serialWeb;
 
 var uint8ArrayToBase64 = function uint8ArrayToBase64(array) {

@@ -4,9 +4,7 @@ const log = require('../../util/log');
 const cast = require('../../util/cast');
 const BLE = require('./ble');
 const {Buffer} = require('buffer');
-const os = require('os');
 
-os.setPriority(-20);
 
 const WebSerial = require('./serial-web');
 
