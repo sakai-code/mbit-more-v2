@@ -281,7 +281,7 @@ class WebSerial {
      * Start data receiving process.
      */
     startReceiving () {// if window not active this program run slow ,so i fixed
-        /** 
+        
         
         this.dataReceiving = window.setTimeout(() => {
             if (this.state !== 'open') return;
@@ -301,7 +301,8 @@ class WebSerial {
                     //this.handleDisconnectError(); //add
                 });
         }, this.receivingInterval);
-    */  
+        /**
+    
         const forwardtime = Data.now();
         this.receiveData()
         .then(() => {
@@ -322,7 +323,7 @@ class WebSerial {
         if (forwardtime - Data.now() >= 1){
             window.requestAnimationFrame(this.startReceiving());
         }
-
+        */
       
 
     }

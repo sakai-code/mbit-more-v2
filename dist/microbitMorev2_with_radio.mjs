@@ -3720,39 +3720,37 @@ var WebSerial$1 = /*#__PURE__*/function () {
       var _this5 = this;
 
       // if window not active this program run slow ,so i fixed
+      this.dataReceiving = window.setTimeout(function () {
+        if (_this5.state !== 'open') return;
 
-      /** 
-      
-      this.dataReceiving = window.setTimeout(() => {
-          if (this.state !== 'open') return;
-          this.receiveData()
-              .then(() => {
-                  // start again
-                 
-                  this.startReceiving();
-              })
-              .catch(() => {
-                     
-                   
-              this.startReceiving(); //add  no stopping when error packet
-                  
-                  //this.handleDisconnectError(); //add
-              });
+        _this5.receiveData().then(function () {
+          // start again
+          _this5.startReceiving();
+        }).catch(function () {
+          _this5.startReceiving(); //add  no stopping when error packet
+          //this.handleDisconnectError(); //add
+
+        });
       }, this.receivingInterval);
-      */
-      var forwardtime = Data.now();
-      this.receiveData().then(function () {
-        // start again
-        _this5.startReceiving();
-      }).catch(function () {
-        _this5.startReceiving(); //add  no stopping when error packet
-        //this.handleDisconnectError(); //add
-
+      /**
+            const forwardtime = Data.now();
+      this.receiveData()
+      .then(() => {
+          // start again
+         
+          this.startReceiving();
+      })
+      .catch(() => {
+             
+           
+      this.startReceiving(); //add  no stopping when error packet
+          
+          //this.handleDisconnectError(); //add
       });
-
-      if (forwardtime - Data.now() >= 1) {
-        window.requestAnimationFrame(this.startReceiving());
+        if (forwardtime - Data.now() >= 1){
+          window.requestAnimationFrame(this.startReceiving());
       }
+      */
     }
     /**
      * Stop data receiving process.
