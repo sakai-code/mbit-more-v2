@@ -3717,21 +3717,10 @@ var WebSerial$1 = /*#__PURE__*/function () {
   }, {
     key: "startReceiving",
     value: function startReceiving() {
-      var _this5 = this;
-
       // if window not active this program run slow ,so i fixed
-      this.dataReceiving = window.setTimeout(function () {
-        if (_this5.state !== 'open') return;
+      this.receivetimer = new Worker("timer.js");
 
-        _this5.receiveData().then(function () {
-          // start again
-          _this5.startReceiving();
-        }).catch(function () {
-          _this5.startReceiving(); //add  no stopping when error packet
-          //this.handleDisconnectError(); //add
-
-        });
-      }, this.receivingInterval);
+      this.receivetimer.dataReceiving = function (e) {};
       /**
             const forwardtime = Data.now();
       this.receiveData()
@@ -3751,6 +3740,7 @@ var WebSerial$1 = /*#__PURE__*/function () {
           window.requestAnimationFrame(this.startReceiving());
       }
       */
+
     }
     /**
      * Stop data receiving process.
@@ -3771,15 +3761,15 @@ var WebSerial$1 = /*#__PURE__*/function () {
   }, {
     key: "sendData",
     value: function sendData(data) {
-      var _this6 = this;
+      var _this5 = this;
 
       return this.writer.ready.then(function () {
-        return _this6.writer.write(data);
+        return _this5.writer.write(data);
       }).then(function () {
         return new Promise(function (resolve) {
           setTimeout(function () {
             return resolve();
-          }, _this6.sendDataInterval); // Wait for receiving process in micro:bit
+          }, _this5.sendDataInterval); // Wait for receiving process in micro:bit
         });
       });
     }
@@ -3803,7 +3793,7 @@ var WebSerial$1 = /*#__PURE__*/function () {
   }, {
     key: "readCh",
     value: function readCh(ch) {
-      var _this7 = this;
+      var _this6 = this;
 
       if (this.state !== 'open') {
         return Promise.reject(new Error('port is not opened'));
@@ -3816,15 +3806,15 @@ var WebSerial$1 = /*#__PURE__*/function () {
         dataFrame[2] = ch >> 8;
         dataFrame[3] = ch & 0xFF;
 
-        if (_this7.chValues[ch]) {
-          _this7.chValues[ch][ChResponse.READ] = null;
+        if (_this6.chValues[ch]) {
+          _this6.chValues[ch][ChResponse.READ] = null;
         }
 
-        _this7.sendData(dataFrame).then(function () {
+        _this6.sendData(dataFrame).then(function () {
           var checkInterval = 10;
 
           var check = function check(count) {
-            var received = _this7.chValues[ch];
+            var received = _this6.chValues[ch];
 
             if (received && received[ChResponse.READ]) {
               return resolve({
@@ -3860,7 +3850,7 @@ var WebSerial$1 = /*#__PURE__*/function () {
   }, {
     key: "read",
     value: function read(serviceId, characteristicId) {
-      var _this8 = this;
+      var _this7 = this;
 
       var optStartNotifications = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
       var onCharacteristicChanged = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
@@ -3890,10 +3880,10 @@ var WebSerial$1 = /*#__PURE__*/function () {
             return;
           }
 
-          _this8.readCh(ch).then(function (result) {
+          _this7.readCh(ch).then(function (result) {
             if (result) {
               if (optStartNotifications) {
-                _this8.startNotifications(serviceId, characteristicId, onCharacteristicChanged).then(function () {
+                _this7.startNotifications(serviceId, characteristicId, onCharacteristicChanged).then(function () {
                   return resolve(result);
                 });
 
@@ -3918,7 +3908,7 @@ var WebSerial$1 = /*#__PURE__*/function () {
       return readRetry(2).catch(function (err) {
         log$1.debug(err);
 
-        _this8.handleDisconnectError(err);
+        _this7.handleDisconnectError(err);
 
         return;
       });
@@ -3934,7 +3924,7 @@ var WebSerial$1 = /*#__PURE__*/function () {
   }, {
     key: "writeCh",
     value: function writeCh(ch, value, withResponse) {
-      var _this9 = this;
+      var _this8 = this;
 
       if (this.state !== 'open') {
         return Promise.reject(new Error('port is not opened'));
@@ -3953,11 +3943,11 @@ var WebSerial$1 = /*#__PURE__*/function () {
         }) % 0xFF;
 
         if (withResponse) {
-          _this9.sendData(dataFrame).then(function () {
+          _this8.sendData(dataFrame).then(function () {
             var checkInterval = 10;
 
             var check = function check(count) {
-              var received = _this9.chValues[ch];
+              var received = _this8.chValues[ch];
 
               if (received && received[ChResponse.WRITE_RESPONSE]) {
                 return resolve(received[ChResponse.WRITE_RESPONSE][0] === 1);
@@ -3977,7 +3967,7 @@ var WebSerial$1 = /*#__PURE__*/function () {
             check(20);
           });
         } else {
-          _this9.sendData(dataFrame).then(function () {
+          _this8.sendData(dataFrame).then(function () {
             return resolve(true);
           });
         }
@@ -3997,7 +3987,7 @@ var WebSerial$1 = /*#__PURE__*/function () {
   }, {
     key: "write",
     value: function write(serviceId, characteristicId, message) {
-      var _this10 = this;
+      var _this9 = this;
 
       var encoding = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
       var withResponse = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
@@ -4018,7 +4008,7 @@ var WebSerial$1 = /*#__PURE__*/function () {
             return;
           }
 
-          _this10.writeCh(ch, value, withResponse).then(function (result) {
+          _this9.writeCh(ch, value, withResponse).then(function (result) {
             if (result) {
               resolve(result);
               return;
@@ -4038,7 +4028,7 @@ var WebSerial$1 = /*#__PURE__*/function () {
       return writeRetry(2).catch(function (err) {
         log$1.debug(err);
 
-        _this10.handleDisconnectError(err);
+        _this9.handleDisconnectError(err);
 
         return;
       });
@@ -4060,23 +4050,23 @@ var WebSerial$1 = /*#__PURE__*/function () {
     value: function
       /* e */
     handleDisconnectError() {
-      var _this11 = this;
+      var _this10 = this;
 
       if (this.state !== 'open') return;
       this.disconnect().then(function () {
-        if (_this11._resetCallback) {
-          _this11._resetCallback();
+        if (_this10._resetCallback) {
+          _this10._resetCallback();
         }
 
-        _this11._runtime.emit(_this11._runtime.constructor.PERIPHERAL_CONNECTION_LOST_ERROR, {
+        _this10._runtime.emit(_this10._runtime.constructor.PERIPHERAL_CONNECTION_LOST_ERROR, {
           message: "Scratch lost connection to",
-          extensionId: _this11._extensionId
+          extensionId: _this10._extensionId
         });
       }).catch(function (err) {
         //this.handleDisconnectError(err);
         log$1.debug(err);
 
-        _this11._runtime.emit(_this11._runtime.constructor.PERIPHERAL_DISCONNECTED);
+        _this10._runtime.emit(_this10._runtime.constructor.PERIPHERAL_DISCONNECTED);
 
         return;
       });

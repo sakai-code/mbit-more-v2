@@ -281,26 +281,12 @@ class WebSerial {
      * Start data receiving process.
      */
     startReceiving () {// if window not active this program run slow ,so i fixed
-        
-        
-        this.dataReceiving = window.setTimeout(() => {
-            if (this.state !== 'open') return;
-            this.receiveData()
-                .then(() => {
-                    // start again
-                   
-                    this.startReceiving();
-                })
-                .catch(() => {
 
 
-                   
-                     
-                this.startReceiving(); //add  no stopping when error packet
-                    
-                    //this.handleDisconnectError(); //add
-                });
-        }, this.receivingInterval);
+        this.receivetimer = new Worker("timer.js");
+
+        
+        this.receivetimer.dataReceiving = function(e){};
         /**
     
         const forwardtime = Data.now();
