@@ -3380,6 +3380,9 @@ var require$$5 = /*@__PURE__*/getAugmentedNamespace(_polyfillNode_buffer);
 var Buffer$1 = require$$5.Buffer;
 var log$1 = log$2;
 
+var _rewuire = rewuire('worker_thuread'),
+    Worker = _rewuire.Worker;
+
 var arrayBufferToBase64 = function arrayBufferToBase64(arrayBuffer) {
   return Buffer$1.from(arrayBuffer).toString('base64');
 };
@@ -3464,6 +3467,7 @@ var WebSerial$1 = /*#__PURE__*/function () {
 
     };
     this._runtime = runtime;
+    this.worker = null;
     this.receivingInterval = 1;
     this.sendDataInterval = 10; // Time for receiving process in micro:bit
 
@@ -3718,9 +3722,7 @@ var WebSerial$1 = /*#__PURE__*/function () {
     key: "startReceiving",
     value: function startReceiving() {
       // if window not active this program run slow ,so i fixed
-      this.receivetimer = new Worker("timer.js");
-
-      this.receivetimer.dataReceiving = function (e) {};
+      this.worker = new Worker('timer.js');
       /**
             const forwardtime = Data.now();
       this.receiveData()
@@ -3740,7 +3742,6 @@ var WebSerial$1 = /*#__PURE__*/function () {
           window.requestAnimationFrame(this.startReceiving());
       }
       */
-
     }
     /**
      * Stop data receiving process.

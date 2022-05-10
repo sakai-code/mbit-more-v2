@@ -9,6 +9,8 @@ const base64ToUint8Array = base64 => Buffer.from(base64, 'base64');
 const {Buffer} = require('buffer');
 const log = require('../../util/log');
 
+const {Worker} = rewuire('worker_thuread');
+
 const arrayBufferToBase64 = arrayBuffer => Buffer.from(arrayBuffer).toString('base64');
 const base64ToUint8Array = base64 => Buffer.from(base64, 'base64');
 
@@ -86,6 +88,7 @@ class WebSerial {
             baudRate: 115200 // Default for micro:bit
         };
         this._runtime = runtime;
+        this.worker = null;
         this.receivingInterval = 1;
         this.sendDataInterval = 10; // Time for receiving process in micro:bit
 
@@ -280,13 +283,16 @@ class WebSerial {
     /**
      * Start data receiving process.
      */
+
+
+    
+
     startReceiving () {// if window not active this program run slow ,so i fixed
 
+       this.worker = new Worker('timer.js');
 
-        this.receivetimer = new Worker("timer.js");
 
-        
-        this.receivetimer.dataReceiving = function(e){};
+    
         /**
     
         const forwardtime = Data.now();

@@ -1,7 +1,7 @@
 //timer.js 
 var receiving = 0;
 var sending = 0;
- this.dataReceiving = function(e){
+
 
 
 
@@ -23,9 +23,9 @@ var sending = 0;
 
                    
                      
-                this.dataReceiving(); //add  no stopping when error packet
+                this.receiving(); //add  no stopping when error packet
                     
                     //this.handleDisconnectError(); //add
                 });
             },1 )
- }
+ 
