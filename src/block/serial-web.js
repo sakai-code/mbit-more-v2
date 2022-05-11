@@ -11,6 +11,7 @@ const log = require('../../util/log');
 
 
 
+
 const arrayBufferToBase64 = arrayBuffer => Buffer.from(arrayBuffer).toString('base64');
 const base64ToUint8Array = base64 => Buffer.from(base64, 'base64');
 
@@ -88,7 +89,7 @@ class WebSerial {
             baudRate: 115200 // Default for micro:bit
         };
         this._runtime = runtime;
-        this.worker = null;
+        
         this.receivingInterval = 1;
         this.sendDataInterval = 10; // Time for receiving process in micro:bit
 
@@ -103,10 +104,15 @@ class WebSerial {
          * @type {Object.<number, function>} - { ch: callback }
          */
         this.notifyListeners = {};
-
         this.requestPeripheral();
+     
+        
        
     }
+
+ 
+
+    
 
     /**
      * Request connection to the peripheral.
@@ -250,6 +256,7 @@ class WebSerial {
      * @returns {Promise} - a Promise which will resolve when read next data
      */
     receiveData () {
+        try{
         return this.reader.read()
             .then(result => {
                 const {value, done} = result;
@@ -278,6 +285,10 @@ class WebSerial {
                 }
                
             });
+        }catch(error){
+            log.log(error); // report error
+
+        }
     }
 
     /**
@@ -285,37 +296,32 @@ class WebSerial {
      */
 
 
-    
+     
 
     startReceiving () {// if window not active this program run slow ,so i fixed
 
-       this.worker = new Worker('timer.js');
+   
 
 
     
-        /**
-    
-        const forwardtime = Data.now();
-        this.receiveData()
-        .then(() => {
-            // start again
-           
-            this.startReceiving();
-        })
-        .catch(() => {
+        this.dataReceiving = window.setTimeout(() => {
+            if (this.state !== 'open') return;
+            this.receiveData()
+                .then(() => {
+                    // start again
+                   
+                    this.startReceiving();
+                })
+                .catch(() => {
 
 
-           
-             
-        this.startReceiving(); //add  no stopping when error packet
-            
-            //this.handleDisconnectError(); //add
-        });
-
-        if (forwardtime - Data.now() >= 1){
-            window.requestAnimationFrame(this.startReceiving());
-        }
-        */
+                   
+                     
+                this.startReceiving(); //add  no stopping when error packet
+                    
+                    //this.handleDisconnectError(); //add
+                });
+        }, this.receivingInterval);
       
 
     }

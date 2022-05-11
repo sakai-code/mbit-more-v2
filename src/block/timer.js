@@ -1,15 +1,26 @@
-//timer.js 
-var receiving = 0;
-var sending = 0;
+class Timer{//timer.js 
+receiving = 0;
+ sending = 0;
+ constructor(){
+   
+  setInterval(function(){console.log(sending);
+  sending++;},100);
+ }
+
+  /**
+  
+    if(receiving !==0){
+  
+      clearInterval(receiving);
+      receiving = 0;
+    }};
+  */
 
 
 
 
-  if(receiving !==0){
 
-    clearInterval(receiving);
-    receiving = 0;
-  }
+  /**
   receiving = setInterval(function(){
     if (this.state !== 'open') return;
             this.receiveData()
@@ -28,4 +39,7 @@ var sending = 0;
                     //this.handleDisconnectError(); //add
                 });
             },1 )
+            */
+ }           
+  module.exports = Timer;
  
