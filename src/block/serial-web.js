@@ -256,8 +256,8 @@ class WebSerial {
      * @returns {Promise} - a Promise which will resolve when read next data
      */
     receiveData () {
-        try{
-        return this.reader.read()
+        
+         return  this.reader.read()
             .then(result => {
                 const {value, done} = result;
                
@@ -285,10 +285,9 @@ class WebSerial {
                 }
                
             });
-        }catch(error){
-            log.log(error); // report error
 
-        }
+        
+       
     }
 
     /**
@@ -301,12 +300,13 @@ class WebSerial {
     startReceiving () {// if window not active this program run slow ,so i fixed
 
    
-
+      
 
     
-        this.dataReceiving = window.setTimeout(() => {
+         if(this.port.readable){
+             try{
             if (this.state !== 'open') return;
-            this.receiveData()
+             this.receiveData()
                 .then(() => {
                     // start again
                    
@@ -321,7 +321,13 @@ class WebSerial {
                     
                     //this.handleDisconnectError(); //add
                 });
-        }, this.receivingInterval);
+            }
+        catch(error){
+            log.log(error);
+
+        }
+    }
+
       
 
     }
@@ -330,7 +336,7 @@ class WebSerial {
      * Stop data receiving process.
      */
     stopReceiving () {
-        clearTimeout(this.dataReceiving);
+        
         this.dataReceiving = null;
     }
 
