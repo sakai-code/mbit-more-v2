@@ -3683,32 +3683,36 @@ var WebSerial$1 = /*#__PURE__*/function () {
     value: function receiveData() {
       var _this4 = this;
 
-      return this.reader.read().then(function (result) {
-        var value = result.value,
-            done = result.done;
+      try {
+        return this.reader.read().then(function (result) {
+          var value = result.value,
+              done = result.done;
 
-        if (done) {
-          _this4.reader.releaseLock();
-        }
-
-        if (value) {
-          var data = value.data;
-          var ch = value.ch;
-
-          if (!_this4.chValues[ch]) {
-            _this4.chValues[ch] = {};
+          if (done) {
+            _this4.reader.releaseLock();
           }
 
-          _this4.chValues[ch][data.type] = data.value;
+          if (value) {
+            var data = value.data;
+            var ch = value.ch;
 
-          if (data.type === ChResponse.NOTIFY) {
-            if (ch in _this4.notifyListeners) {
-              _this4.notifyListeners[ch](arrayBufferToBase64(data.value)); //Fixed
+            if (!_this4.chValues[ch]) {
+              _this4.chValues[ch] = {};
+            }
 
+            _this4.chValues[ch][data.type] = data.value;
+
+            if (data.type === ChResponse.NOTIFY) {
+              if (ch in _this4.notifyListeners) {
+                _this4.notifyListeners[ch](arrayBufferToBase64(data.value)); //Fixed
+
+              }
             }
           }
-        }
-      });
+        });
+      } catch (error) {
+        log$1.log(error); // report error
+      }
     }
     /**
      * Start data receiving process.
@@ -3720,21 +3724,18 @@ var WebSerial$1 = /*#__PURE__*/function () {
       var _this5 = this;
 
       // if window not active this program run slow ,so i fixed
-      if (this.port.readable) {
-        try {
-          if (this.state !== 'open') return;
-          this.receiveData().then(function () {
-            // start again
-            _this5.startReceiving();
-          }).catch(function () {
-            _this5.startReceiving(); //add  no stopping when error packet
-            //this.handleDisconnectError(); //add
+      this.dataReceiving = window.setTimeout(function () {
+        if (_this5.state !== 'open') return;
 
-          });
-        } catch (error) {
-          log$1.log(error);
-        }
-      }
+        _this5.receiveData().then(function () {
+          // start again
+          _this5.startReceiving();
+        }).catch(function () {
+          _this5.startReceiving(); //add  no stopping when error packet
+          //this.handleDisconnectError(); //add
+
+        });
+      }, this.receivingInterval);
     }
     /**
      * Stop data receiving process.
@@ -3743,6 +3744,7 @@ var WebSerial$1 = /*#__PURE__*/function () {
   }, {
     key: "stopReceiving",
     value: function stopReceiving() {
+      clearTimeout(this.dataReceiving);
       this.dataReceiving = null;
     }
     /**
