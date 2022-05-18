@@ -235,7 +235,9 @@ class WebSerial {
                 return this.write.closed;
             })
             .then(() => {
-                this.port.close();
+               // this.port.close(); 5/16/2022　error occur so make selectdialog and restart browser
+                let select = window.confirm('micro:bitの再起動もしくは切断を検知しました。プロジェクトを保存し再読み込みを行ってください。保存方法　：　OKをクリックしファイル　→　コンピューターに保存する')
+                //if (select === true){window.location.reload(true); }
                 this.state = 'close';
                 this.reader = null;
                 this.writer = null;
@@ -249,6 +251,9 @@ class WebSerial {
      */
     isConnected () {
         return this.state === 'open';
+    }
+   timeout (){
+       return  new Promise((resolve,reject) => setTimeout(reject,3000,))
     }
 
     /**
@@ -304,24 +309,26 @@ class WebSerial {
 
 
     
-        this.dataReceiving = window.setTimeout(() => {
+       
             if (this.state !== 'open') return;
-            this.receiveData()
+            Promise.race([this.receiveData(),this.timeout()])
+            
                 .then(() => {
                     // start again
                    
                     this.startReceiving();
                 })
-                .catch(() => {
+                .catch((error) => {
+
 
 
                    
                      
-                this.startReceiving(); //add  no stopping when error packet
+                //this.startReceiving(); //add  no stopping when error packet
                     
-                    //this.handleDisconnectError(); //add
+                    this.handleDisconnectError(); //add
                 });
-        }, this.receivingInterval);
+     
       
 
     }
@@ -330,8 +337,7 @@ class WebSerial {
      * Stop data receiving process.
      */
     stopReceiving () {
-        clearTimeout(this.dataReceiving);
-        this.dataReceiving = null;
+        
     }
 
     /**
