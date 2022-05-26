@@ -197,7 +197,7 @@ class WebSerial {
                 controller.terminate();
             }
         }
-        this.port.open(this._serialOptions)
+       this.port.open(this._serialOptions)
             .then(() => {
                 log.log(`SerialPort: open`);
             
@@ -214,7 +214,10 @@ class WebSerial {
                 this._runtime.emit(this._runtime.constructor.PERIPHERAL_CONNECTED);
                 this._connectCallback();
                 this.startReceiving();
-            });
+            })
+            .catch(() =>this.handleDisconnectError())
+ 
+        
     }
 
     /**
