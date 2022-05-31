@@ -17,17 +17,8 @@
 
 > Full-functional extension of micro:bit for Scratch3
 
-This is an extension for [Scratch3 by MIT](https://scratch.mit.edu/). You can code using all sensors and pins on micro:bit with normal Scratch3 blocks on this app.
 
-
-## What You Can Do With This Extension
-
-Open a Scratch3-Mod application ✨ [Microbit More](https://microbit-more.github.io/) to use this extension. You can code using its extended blocks and all blocks in normal Scratch3 on this app. 
-
-You don't need to run [Scratch Link](https://scratch.mit.edu/microbit) when your browser is Chrome, Edge or 'Web Bluetooth API' supporting one (the browser in Chromebook, [‎Scrub](https://apps.apple.com/jp/app/scrub-web-browser/id1569777095) in iPadOS, like that).
-
-
-## How to Use in Xcratch
+## How to Use in Xcratch 
 
 This extension can be used with other extension in [Xcratch](https://xcratch.github.io/). 
 1. Open [Xcratch Editor](https://xcratch.github.io/editor)
@@ -35,28 +26,27 @@ This extension can be used with other extension in [Xcratch](https://xcratch.git
 3. Select 'Extension Loader' extension
 4. Type the module URL in the input field 
 ```
-https://microbit-more.github.io/dist/microbitMore.mjs
+https://sakai-labo.github.io/mbit-more-v2-with-radio/dist/microbitMorev2_with_radio.mjs
 ```
 
 ## Author
 
-👤 **Koji Yokokawa**
+👤 **sakai**
 
-* Website: http://www.yengawa.com/
-* Github: [@yokobond](https://github.com/yokobond)
+* https://sites.google.com/view/sakaicode-makecode/%E3%83%9B%E3%83%BC%E3%83%A0
+* Github: [@sakai-labo](https://github.com/sakai-labo)
 
 ## 🤝 Contributing
 
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/microbit-more/mbit-more-v2/issues). You can also take a look at the [contributing guide](https://github.com/microbit-more/mbit-more-v2/blob/master/CONTRIBUTING.md).
+
 
 ## Show your support
 
 Give a ⭐️ if this project helped you!
 
-
+@sakaicode@gmail.com
 ## 📝 License
 
-Copyright © 2020-2021 [Koji Yokokawa](https://github.com/yokobond).<br />
 This project is [MIT](https://github.com/microbit-more/mbit-more-v2/blob/master/LICENSE) licensed.
 
 ***
