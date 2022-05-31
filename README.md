@@ -1,4 +1,4 @@
-<h1 align="center">MicroBit More v2</h1>
+<h1 align="center">MicroBit More v2 with Radio</h1>
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-0.2.4-blue.svg?cacheSeconds=2592000" />
   <a href="https://microbit-more.github.io/mbit-more-v2" target="_blank">
