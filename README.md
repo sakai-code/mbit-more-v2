@@ -29,6 +29,9 @@ This extension can be used with other extension in [Xcratch](https://xcratch.git
 https://sakai-labo.github.io/mbit-more-v2-with-radio/dist/microbitMorev2_with_radio.mjs
 ```
 
+Xcratchの拡張として利用する場合上記URLを拡張機能として読み込んでください。
+なお　(https://sakai-labo.github.io/microbitMorev2-with-Radio.github.io/editor/)にあらかじめ導入したものがあります。
+
 ## Author
 
 👤 **sakai**
