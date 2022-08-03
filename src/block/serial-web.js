@@ -233,13 +233,15 @@ class WebSerial {
         return this.reader.cancel()
             .then(() => this.readableStreamClosed.catch(() => { /* Ignore the error */ }))
             .then(() => {
-                this.writer.close();
+                
+                //this.writer.close();
                 this.writer.releaseLock();
+       
                 return this.write.closed;
             })
             .then(() => {
-               // this.port.close(); 5/16/2022　error occur so make selectdialog and restart browser
-                let select = window.confirm('micro:bitの再起動もしくは切断を検知しました。プロジェクトを保存し再読み込みを行ってください。保存方法　：　OKをクリックしファイル　→　コンピューターに保存する')
+                this.port.close(); 
+                let select = window.confirm('micro:bitの再起動もしくは切断を検知しました。')
                 //if (select === true){window.location.reload(true); }
                 this.state = 'close';
                 this.reader = null;
@@ -312,7 +314,7 @@ class WebSerial {
 
 
     
-       
+        this.dataReceiving = window.setTimeout(() => {
             if (this.state !== 'open') return;
             Promise.race([this.receiveData(),this.timeout()])
             
@@ -331,7 +333,7 @@ class WebSerial {
                     
                     this.handleDisconnectError(); //add
                 });
-     
+            }, this.receivingInterval);     
       
 
     }
@@ -340,6 +342,8 @@ class WebSerial {
      * Stop data receiving process.
      */
     stopReceiving () {
+        clearTimeout(this.dataReceiving);
+        this.dataReceiving = null;
         
     }
 
@@ -493,6 +497,7 @@ class WebSerial {
             if (withResponse) {
                 this.sendData(dataFrame)
                     .then(() => {
+                        log.log("check");
                         const checkInterval = 10;
                         const check = count => {
                             const received = this.chValues[ch];
@@ -513,7 +518,9 @@ class WebSerial {
                 this.sendData(dataFrame)
                     .then(() => resolve(true));
             }
+            //this.writer.releaseLock();
         });
+        
     }
 
     /**
